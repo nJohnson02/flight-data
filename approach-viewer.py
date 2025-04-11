@@ -28,26 +28,31 @@ def plot_approach(data):
     last_key_pressed = None
 
     times = [r["Timestamp"] for r in data if pd.notna(r.get("Timestamp"))]
-    alts = [float(r["AltMSL"]) for r in data if str(r.get("AltMSL", "")).strip() != ""]
-    vspeeds = [float(r["VSpd"]) for r in data if str(r.get("VSpd", "")).strip() != ""]
+    alts = [float(r["AltGPS"]) for r in data if str(r.get("AltGPS", "")).strip() != ""]
+    alt_rate = [((alts[i+1] - alts[i]) / ((times[i+1] - times[i]).total_seconds() or 1)) * 60
+                for i in range(len(alts)-1)]
+    times_alt_rate = times[:len(alt_rate)]
 
     start_time = times[0]
     end_time = times[-1]
+    landing_altitude = alts[-1]  # Assuming last altitude is at landing
 
     fig, ax1 = plt.subplots(figsize=(12, 6))
     fig.canvas.mpl_connect('key_press_event', on_key)
-    
+
     ax1.set_xlabel("Time")
-    ax1.set_ylabel("Altitude (ft MSL)", color='tab:blue')
-    l1, = ax1.plot(times[:len(alts)], alts, label="Altitude (MSL)", color='tab:blue')
+    ax1.set_ylabel("GPS Altitude (ft)", color='tab:blue')
+    l1, = ax1.plot(times[:len(alts)], alts, label="GPS Altitude", color='tab:blue')
     ax1.axvline(x=end_time, color='red', linestyle='--', alpha=0.8, label="Landing")
     ax1.axvline(x=start_time, color='blue', linestyle='--', alpha=0.5, label="Approach Start")
     ax1.tick_params(axis='y', labelcolor='tab:blue')
+    ax1.set_ylim(landing_altitude, landing_altitude + 500)  # Landing altitude at bottom
 
     ax2 = ax1.twinx()
-    ax2.set_ylabel("Vertical Speed", color='tab:orange')
-    l2, = ax2.plot(times[:len(vspeeds)], vspeeds, label="Vertical Speed", linestyle='-', color='tab:orange')
-    ax2.tick_params(axis='y', labelcolor='tab:orange')
+    ax2.set_ylabel("Altitude Rate (ft/min)", color='tab:green')
+    l2, = ax2.plot(times_alt_rate, alt_rate, label="Altitude Rate (ft/min)", linestyle='-', color='tab:green')
+    ax2.tick_params(axis='y', labelcolor='tab:green')
+    ax2.set_ylim(-1000, 200)  # Fixed vertical speed range
 
     fig.suptitle("Approach Viewer (← back, → = skip, ↑ = good, ↓ = bad, delete = anomaly)")
     fig.legend(handles=[l1, l2], loc="upper right")
