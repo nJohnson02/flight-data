@@ -1,3 +1,0 @@
-1. Choose a model
-2. Convert to vectors
-3. Seperate test and training data
