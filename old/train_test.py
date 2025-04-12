@@ -20,7 +20,7 @@ for split_dir in [train_dir, test_dir]:
 # Collect and shuffle files
 good_files = list(good_dir.glob("*.csv"))
 bad_files = list(bad_dir.glob("*.csv"))
-random.seed(42)
+random.seed(69)
 random.shuffle(good_files)
 random.shuffle(bad_files)
 
