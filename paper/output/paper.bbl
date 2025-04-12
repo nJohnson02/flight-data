@@ -21,6 +21,11 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{gil2022epilots}
+D.~Gil \emph{et~al.}, ``{E-Pilots: A System to Predict Hard Landing During the
+  Approach Phase of Commercial Flights},'' \emph{IEEE Access}, vol.~10, pp.
+  7489--7503, 2022.
+
 \bibitem{chen2016xgboost}
 T.~Chen and C.~Guestrin, ``Xgboost: A scalable tree boosting system,''
   \emph{Proceedings of the 22nd ACM SIGKDD international conference on
