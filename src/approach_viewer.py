@@ -141,4 +141,4 @@ def view_all_approaches(unclassified_folder):
 
 
 if __name__ == "__main__":
-    view_all_approaches("data/unclassified")
+    view_all_approaches("../data/unclassified")

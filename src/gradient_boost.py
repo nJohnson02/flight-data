@@ -8,7 +8,7 @@ from xgboost import XGBClassifier, plot_tree
 import matplotlib.pyplot as plt
 
 # --- Config ---
-n_points = 40  # use the first 40 time steps
+n_points = 60  # use the final 60 time steps of each approach
 
 def load_and_resample(csv_path, n_points):
     df = pd.read_csv(csv_path)
@@ -20,11 +20,10 @@ def load_and_resample(csv_path, n_points):
     if len(df) < n_points:
         return None
 
-    alts = df["AltGPS"].astype(float).values[:n_points]
+    alts = df["AltGPS"].astype(float).values[-n_points:]
     alt_rate = np.diff(alts, prepend=alts[0]) * 60  # ft/min
-    ias = df["IAS"].astype(float).values[:n_points]
 
-    return np.concatenate([alts, alt_rate, ias])
+    return np.concatenate([alts, alt_rate])
 
 def load_dataset(classified_dir):
     X, y = [], []
@@ -39,15 +38,11 @@ def load_dataset(classified_dir):
 
 # --- Main Execution ---
 base_dir = Path(__file__).resolve().parent
-classified_dir = base_dir / "data"
+classified_dir = base_dir / "../data"
 
 print("Loading all labeled data...")
 X, y = load_dataset(classified_dir)
 print(f"Loaded {len(X)} total samples.")
-
-if len(X) == 0:
-    print("No valid samples found. Check n_points configuration.")
-    exit(1)
 
 # Run k-fold cross-validation
 clf = XGBClassifier(n_estimators=100, max_depth=5, eval_metric='logloss')
