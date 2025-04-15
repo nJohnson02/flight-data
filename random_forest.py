@@ -36,7 +36,7 @@ def load_dataset(classified_dir):
 
 # --- Main Execution ---
 base_dir = Path(__file__).resolve().parent
-classified_dir = base_dir / "manual_classification"
+classified_dir = base_dir / "data"
 
 print("Loading all labeled data...")
 X, y = load_dataset(classified_dir)
