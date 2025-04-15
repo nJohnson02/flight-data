@@ -54,26 +54,26 @@ My data for this work was sourced from the flight logs created by the Garmin G10
 The first step toward making this varied data usable for machine learning was to create a method for identifying landings. This was done by locating all local minima of altitude throughout the flight. To reduce noise, I required a minimum to be the lowest value within a 150-second window. Additional logic required that the minimum be within 100 feet of Prescott’s field elevation (5045 feet), and that the aircraft had been at least 500 feet above that point within the prior 180 seconds. This process was highly effective, with only 72 out of 1014 detected landings misclassified.
 
 \begin{figure}[H]
-    \centerline{\includegraphics[width=\linewidth]{local_minima_only.png}}
+    \centerline{\includegraphics[width=\linewidth]{figs/local_minima_only.png}}
     \caption{Local minima only}
 \end{figure}
 
 \begin{figure}[H]
-    \centerline{\includegraphics[width=\linewidth]{additional_logic1.png}}
+    \centerline{\includegraphics[width=\linewidth]{figs/additional_logic1.png}}
     \caption{Local minima with additional logic}
 \end{figure}
 
 With this detection in place, I isolated approach segments. Each approach was defined as the 60 seconds preceding a landing. This fixed-length format was essential for later vectorization. Each approach segment was saved as a separate CSV file for labeling.
 
 \begin{figure}[H]
-    \centerline{\includegraphics[width=\linewidth]{approach_segments.png}}
+    \centerline{\includegraphics[width=\linewidth]{figs/approach_segments.png}}
     \caption{Isolated approach segments}
 \end{figure}
 
 Since I chose supervised learning, approaches needed to be labeled as good or bad. I manually labeled all approaches using a Python script that displayed plots of altitude and altitude rate over time. I labeled each segment as good, bad, or anomalous (e.g., false positives from the detection logic). Criteria for "bad" included a descent rate exceeding 200 feet per minute or erratic profiles without a smooth flare. Good landings featured gradual, stable descents ending in a clear flare.
 
 \begin{figure}[H]
-    \centerline{\includegraphics[width=\linewidth]{approach_viewer.png}}
+    \centerline{\includegraphics[width=\linewidth]{figs/approach_viewer.png}}
     \caption{Manual classification interface}
 \end{figure}
   
@@ -87,7 +87,7 @@ After testing several features—including airspeed, vertical acceleration, and 
 I started out using a random forest model to do its relative simplicity and then switched to a gradient boosting classifier due to its potential for higher accuracy \cite{chen2016xgboost}. Using only GPS altitude and altitude rate, the model achieved excellent accuracy, with only a few misclassifications out of nearly 200 segments. Five-fold cross-validation yielded consistent results between 96\% and 99\% accuracy, suggesting a strong generalization ability and minimal overfitting.
 
 \begin{figure}[H]
-    \centerline{\includegraphics[width=0.6\linewidth]{random_forest.png}}
+    \centerline{\includegraphics[width=0.6\linewidth]{figs/random_forest.png}}
     \caption{Initial random forest model}
 \end{figure}
 
@@ -101,7 +101,7 @@ Confusion Matrix:
 \end{lstlisting}
 
 \begin{figure}[H]
-    \centerline{\includegraphics[width=\linewidth]{gradient_boosting.png}}
+    \centerline{\includegraphics[width=\linewidth]{figs/gradient_boosting.png}}
     \caption{Latest gradient boosting model}
 \end{figure}
 

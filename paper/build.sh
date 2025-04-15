@@ -1,2 +1,3 @@
-sh clean.sh
-latexmk -pdf -output-directory=output paper.tex
+#!/bin/bash
+rm ./out/*
+latexmk -pdf -output-directory=out paper.tex
